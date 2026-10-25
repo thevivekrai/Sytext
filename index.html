@@ -32,7 +32,7 @@
       --font-serif: 'Instrument Serif', Georgia, serif;
       --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.04);
       --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.08);
-      --glass-border: rgba(255, 255, 255, 0.6);
+      --shadow-lg: 0 24px 64px rgba(0, 0, 0, 0.12);
     }
 
     [data-theme="dark"] {
@@ -48,7 +48,7 @@
       --brand-glass-bg: linear-gradient(180deg, #121a26 0%, #0b0f14 100%);
       --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
       --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.5);
-      --glass-border: rgba(255, 255, 255, 0.1);
+      --shadow-lg: 0 24px 64px rgba(0, 0, 0, 0.6);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -244,43 +244,93 @@
       margin-bottom: 24px;
       color: var(--text-muted);
     }
-    .carousel-label .step { color: var(--text-light); }
+    .carousel-label .step { color: var(--text-light); font-variant-numeric: tabular-nums; }
     .carousel-label .icon { color: var(--accent-orange); font-size: 18px; }
     .carousel-label .app-name { font-weight: 700; color: var(--text-main); }
 
-    /* ============ 图片轮播组件 ============ */
+    /* ============ 笔记本电脑/浏览器视窗轮播 ============ */
     .carousel-wrapper {
-      max-width: 340px;
+      max-width: 960px;
       margin: 0 auto;
       position: relative;
     }
     
+    .laptop-frame {
+      background: var(--bg-surface);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Mac 风格浏览器头部 */
+    .browser-header {
+      background: var(--bg-body);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .browser-dots {
+      display: flex;
+      gap: 8px;
+    }
+    .browser-dots span {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .dot-red { background: #ff5f56; }
+    .dot-yellow { background: #ffbd2e; }
+    .dot-green { background: #27c93f; }
+    
+    .browser-url {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 48px;
+      font-size: 12px;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .browser-url::before {
+      content: '🔒';
+      font-size: 10px;
+    }
+
     .carousel-track {
       display: flex;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
       scrollbar-width: none; /* Firefox */
       -ms-overflow-style: none; /* IE/Edge */
-      border-radius: 40px;
-      box-shadow: var(--shadow-md), 0 0 0 8px var(--text-main);
       background: var(--bg-surface);
-      border: 2px solid var(--border);
-      transition: box-shadow 0.3s ease;
     }
-    .carousel-track::-webkit-scrollbar {
-      display: none; /* Chrome/Safari */
-    }
+    .carousel-track::-webkit-scrollbar { display: none; /* Chrome/Safari */ }
     
     .carousel-slide {
       flex: 0 0 100%;
       scroll-snap-align: center;
-      aspect-ratio: 9 / 19.5;
+      aspect-ratio: 16 / 10; /* Laptop screen aspect ratio */
+      background: #f8f9fa; /* Fallback */
+    }
+    
+    /* 适配深色模式下的图片背景 */
+    [data-theme="dark"] .carousel-slide {
+      background: #0b0f14;
     }
     
     .carousel-slide img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain; /* Show full desktop UI */
       display: block;
     }
 
@@ -288,7 +338,7 @@
       display: flex;
       justify-content: center;
       gap: 8px;
-      margin-top: 24px;
+      margin-top: 32px;
     }
     .dot {
       width: 8px;
@@ -370,16 +420,38 @@
       font-size: 14px;
       color: var(--text-muted);
     }
+
+    /* ============ 品牌图标展示区 ============ */
     .app-logos {
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 16px 28px;
-      margin-top: 48px;
-      color: var(--text-light);
-      font-size: 14px;
-      font-weight: 500;
+      gap: 32px;
+      margin-top: 64px;
+      align-items: center;
     }
+    .app-logos img {
+      width: 32px;
+      height: 32px;
+      opacity: 0.6;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      filter: grayscale(100%);
+    }
+    /* 允许深色模式下反转颜色 */
+    [data-theme="dark"] .app-logos img {
+      filter: grayscale(100%) invert(1) brightness(2);
+    }
+    .app-logos img:hover {
+      opacity: 1;
+      filter: grayscale(0%);
+      transform: scale(1.1);
+    }
+    [data-theme="dark"] .app-logos img:hover {
+      filter: grayscale(0%) invert(0) brightness(1);
+    }
+    /* 针对部分在深色下需要保持原色的 Logo */
+    .app-logos img.no-invert { filter: grayscale(100%); }
+    [data-theme="dark"] .app-logos img.no-invert { filter: grayscale(100%) brightness(1.5); }
 
     /* ============ 隐私与本地保护 ============ */
     .privacy { background: var(--bg-body); }
@@ -505,13 +577,21 @@
       .nav-brand span { display: none; }
       .hamburger { display: flex; }
       
-      .hero { padding-top: 120px; }
+      .hero { padding-top: 120px; padding-bottom: 60px; }
+      
+      .laptop-frame { border-radius: 12px; }
+      .browser-header { padding: 8px 12px; }
+      .browser-dots span { width: 8px; height: 8px; }
+      .browser-url { display: none; /* 手机端隐藏地址栏 */ }
       
       .stat-card { padding: 24px; }
       .stat-grid { grid-template-columns: 1fr; gap: 16px; }
       
       .faq-item summary { padding: 20px; font-size: 16px; }
       .faq-content { padding: 0 20px 20px; font-size: 15px; }
+      
+      .app-logos { gap: 20px; margin-top: 40px; }
+      .app-logos img { width: 24px; height: 24px; }
     }
   </style>
 </head>
@@ -564,20 +644,33 @@
         <span style="color: var(--text-light);">AI-first inbox</span>
       </div>
 
-      <!-- 真实截图轮播 -->
+      <!-- 桌面级应用截图轮播 (Laptop Mockup) -->
       <div class="carousel-wrapper">
-        <div class="carousel-track" id="carouselTrack">
-          <!-- 截图 1: Inbox Light -->
-          <div class="carousel-slide">
-            <img src="https://raw.githubusercontent.com/thevivekrai/ai-chat/main/docs/screenshots/inbox-light.jpg" alt="Sytext Inbox Light Mode" loading="eager" />
+        <div class="laptop-frame">
+          <!-- 浏览器头部 -->
+          <div class="browser-header">
+            <div class="browser-dots">
+              <span class="dot-red"></span>
+              <span class="dot-yellow"></span>
+              <span class="dot-green"></span>
+            </div>
+            <div class="browser-url">sytext.onrender.com</div>
           </div>
-          <!-- 截图 2: Link WhatsApp -->
-          <div class="carousel-slide">
-            <img src="https://raw.githubusercontent.com/thevivekrai/ai-chat/main/docs/screenshots/link-whatsapp.jpg" alt="Sytext Link WhatsApp" loading="lazy" />
-          </div>
-          <!-- 截图 3: Ask Dark -->
-          <div class="carousel-slide">
-            <img src="https://raw.githubusercontent.com/thevivekrai/ai-chat/main/docs/screenshots/ask-dark.jpg" alt="Sytext Ask Dark Mode" loading="lazy" />
+          
+          <!-- 滚动轨道 -->
+          <div class="carousel-track" id="carouselTrack">
+            <!-- 截图 1: Inbox Light -->
+            <div class="carousel-slide">
+              <img src="https://raw.githubusercontent.com/thevivekrai/ai-chat/main/docs/screenshots/inbox-light.jpg" alt="Sytext Inbox Light Mode" loading="eager" />
+            </div>
+            <!-- 截图 2: Link WhatsApp -->
+            <div class="carousel-slide">
+              <img src="https://raw.githubusercontent.com/thevivekrai/ai-chat/main/docs/screenshots/link-whatsapp.jpg" alt="Sytext Link WhatsApp" loading="lazy" />
+            </div>
+            <!-- 截图 3: Ask Dark -->
+            <div class="carousel-slide">
+              <img src="https://raw.githubusercontent.com/thevivekrai/ai-chat/main/docs/screenshots/ask-dark.jpg" alt="Sytext Ask Dark Mode" loading="lazy" />
+            </div>
           </div>
         </div>
         
@@ -644,14 +737,24 @@
         </div>
       </div>
 
+      <!-- 使用 SimpleIcons 引入真实品牌小图标 -->
       <div class="app-logos">
-        <span>WhatsApp</span>
-        <span>Telegram</span>
-        <span>Instagram</span>
-        <span>Slack</span>
-        <span>SMS</span>
-        <span>Matrix</span>
-        <span>Guffshuff</span>
+        <!-- WhatsApp -->
+        <img src="https://cdn.simpleicons.org/whatsapp/25D366" alt="WhatsApp" />
+        <!-- Telegram -->
+        <img src="https://cdn.simpleicons.org/telegram/26A5E4" alt="Telegram" />
+        <!-- Instagram -->
+        <img src="https://cdn.simpleicons.org/instagram/E4405F" alt="Instagram" />
+        <!-- Slack -->
+        <img src="https://cdn.simpleicons.org/slack/4A154B" alt="Slack" />
+        <!-- Signal -->
+        <img src="https://cdn.simpleicons.org/signal/3A76F0" alt="Signal" />
+        <!-- Matrix -->
+        <img src="https://cdn.simpleicons.org/matrix/000000" alt="Matrix" class="no-invert" />
+        <!-- Discord -->
+        <img src="https://cdn.simpleicons.org/discord/5865F2" alt="Discord" />
+        <!-- SMS / Messages (用 Apple Messages 图标代替) -->
+        <img src="https://cdn.simpleicons.org/imessage/34C759" alt="SMS" />
       </div>
     </div>
   </section>
@@ -839,21 +942,18 @@
       });
     });
 
-    // 图片轮播逻辑 (更新计数器和圆点)
+    // 图片轮播逻辑
     const track = document.getElementById('carouselTrack');
     const counter = document.getElementById('slideCounter');
     const dots = document.querySelectorAll('.dot');
 
     const updateCarouselState = () => {
-      // 计算当前是第几页
       const slideWidth = track.clientWidth;
       const scrollPosition = track.scrollLeft;
       const activeIndex = Math.round(scrollPosition / slideWidth);
 
-      // 更新计数器文本 (01 / 03)
       counter.textContent = `0${activeIndex + 1} / 03`;
 
-      // 更新圆点状态
       dots.forEach((dot, index) => {
         if (index === activeIndex) {
           dot.classList.add('active');
@@ -863,10 +963,8 @@
       });
     };
 
-    // 监听滑动事件
     track.addEventListener('scroll', updateCarouselState);
 
-    // 点击圆点跳转到对应图片
     dots.forEach((dot, index) => {
       dot.addEventListener('click', () => {
         const slideWidth = track.clientWidth;
