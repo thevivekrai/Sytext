@@ -244,157 +244,64 @@
       margin-bottom: 24px;
       color: var(--text-muted);
     }
+    .carousel-label .step { color: var(--text-light); }
     .carousel-label .icon { color: var(--accent-orange); font-size: 18px; }
     .carousel-label .app-name { font-weight: 700; color: var(--text-main); }
 
-    /* ============ 演示手机组件 (Sytext UI) ============ */
-    .phone-mockup-wrapper {
-      max-width: 380px;
+    /* ============ 图片轮播组件 ============ */
+    .carousel-wrapper {
+      max-width: 340px;
       margin: 0 auto;
       position: relative;
     }
-    .phone-frame {
+    
+    .carousel-track {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE/Edge */
+      border-radius: 40px;
+      box-shadow: var(--shadow-md), 0 0 0 8px var(--text-main);
       background: var(--bg-surface);
-      border: 8px solid var(--text-main);
-      border-radius: 48px;
-      overflow: hidden;
-      box-shadow: var(--shadow-md), 0 0 0 2px var(--border);
-      position: relative;
-      padding: 0;
-      transition: border-color 0.3s ease;
+      border: 2px solid var(--border);
+      transition: box-shadow 0.3s ease;
     }
-    .phone-screen {
-      background: var(--bg-body);
-      padding: 16px 12px 24px;
-      min-height: 580px;
-      display: flex;
-      flex-direction: column;
-      transition: background 0.3s ease;
+    .carousel-track::-webkit-scrollbar {
+      display: none; /* Chrome/Safari */
     }
-    .phone-notch {
-      width: 120px;
-      height: 28px;
-      background: var(--text-main);
-      border-radius: 0 0 18px 18px;
-      margin: 0 auto 12px;
+    
+    .carousel-slide {
+      flex: 0 0 100%;
+      scroll-snap-align: center;
+      aspect-ratio: 9 / 19.5;
     }
-    .phone-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 8px;
-      margin-bottom: 16px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-main);
-    }
-    .status-bar { display: flex; gap: 4px; align-items: center; }
-    .status-bar span {
+    
+    .carousel-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       display: block;
+    }
+
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 24px;
+    }
+    .dot {
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: var(--text-light);
+      background: var(--border);
+      transition: all 0.3s ease;
+      cursor: pointer;
     }
-
-    .phone-tabs {
-      display: flex;
-      gap: 8px;
-      padding: 0 8px;
-      margin-bottom: 16px;
-      font-size: 12px;
-      font-weight: 600;
-      overflow-x: auto;
-    }
-    .phone-tab {
-      padding: 6px 12px;
-      border-radius: var(--radius-pill);
-      background: var(--bg-surface);
-      color: var(--text-muted);
-      white-space: nowrap;
-      border: 1px solid var(--border);
-    }
-    .phone-tab.active {
-      background: var(--black);
-      color: var(--white);
-      border-color: var(--black);
-    }
-
-    .chat-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      flex: 1;
-    }
-    .chat-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      background: var(--bg-surface);
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-subtle);
-      text-align: left;
-    }
-    .chat-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: var(--accent-blue);
-      display: grid;
-      place-items: center;
-      font-size: 14px;
-      font-weight: 700;
-      color: #fff;
-      flex-shrink: 0;
-    }
-    .chat-content { flex: 1; min-width: 0; }
-    .chat-name {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-main);
-      display: flex;
-      justify-content: space-between;
-    }
-    .chat-meta { font-size: 11px; color: var(--text-light); }
-    .chat-preview {
-      font-size: 12px;
-      color: var(--text-muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .chat-tag {
-      font-size: 10px;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: var(--radius-pill);
-      background: #fff3cd;
-      color: #856404;
-      text-transform: uppercase;
-    }
-    .chat-tag.urgent { background: #f8d7da; color: #721c24; }
-
-    .ai-action-bar {
-      margin-top: 16px;
-      padding: 12px;
-      background: var(--bg-surface);
-      border-radius: var(--radius-md);
-      border: 1px solid var(--accent-orange);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-main);
-    }
-    .ai-action-bar .draft-btn {
-      background: var(--accent-orange);
-      color: #fff;
-      padding: 6px 14px;
-      border-radius: var(--radius-pill);
-      font-size: 12px;
-      font-weight: 700;
+    .dot.active {
+      background: var(--text-main);
+      width: 24px;
+      border-radius: 4px;
     }
 
     .hero-caption {
@@ -599,9 +506,6 @@
       .hamburger { display: flex; }
       
       .hero { padding-top: 120px; }
-      .phone-frame { border-width: 6px; border-radius: 36px; }
-      .phone-screen { padding: 12px 8px 16px; min-height: 500px; }
-      .phone-notch { width: 100px; height: 24px; }
       
       .stat-card { padding: 24px; }
       .stat-grid { grid-template-columns: 1fr; gap: 16px; }
@@ -615,20 +519,21 @@
 
   <!-- 顶部提示条 -->
   <div class="top-banner">
-    Try Sytext demo. No account needed. <a href="https://sytext.onrender.com/" target="_blank">See Demo/a>
+    Try Sytext. No account needed. <a href="https://sytext.onrender.com">Try for free</a>
   </div>
 
   <!-- 导航栏 -->
   <div class="nav-wrapper" id="navWrapper">
     <nav class="navbar">
       <a href="#" class="nav-brand">
+        <!-- 动态 Logo -->
         <img src="https://sytext.onrender.com/favicon.svg" alt="Sytext" />
         <span>Sytext</span>
       </a>
       
       <div class="nav-actions">
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">☀️</button>
-        <a href="https://sytext.onrender.com/" target="_blank" class="btn btn-black">Try for free</a>
+        <a href="https://sytext.onrender.com" class="btn btn-black">Try for free</a>
         <button class="hamburger" id="hamburgerBtn">
           <span></span><span></span><span></span>
         </button>
@@ -641,7 +546,7 @@
     <a href="#features">Features</a>
     <a href="#privacy">Privacy</a>
     <a href="#faq">FAQ</a>
-    <a href="https://github.com/thevivekrai/ai-chat" target="_blank" class="btn btn-black" style="margin-top: 24px;">Try for free</a>
+    <a href="https://sytext.onrender.com" class="btn btn-black" style="margin-top: 24px;">Try for free</a>
   </div>
 
   <!-- Hero 区域 -->
@@ -653,89 +558,34 @@
       </h1>
       
       <div class="carousel-label">
-        <span class="step">01 / 05</span>
+        <span class="step" id="slideCounter">01 / 03</span>
         <span class="icon">✺</span>
         <span class="app-name">Sytext</span>
         <span style="color: var(--text-light);">AI-first inbox</span>
       </div>
 
-      <!-- 演示手机 -->
-      <div class="phone-mockup-wrapper">
-        <div class="phone-frame">
-          <div class="phone-screen">
-            <div class="phone-notch"></div>
-            
-            <div class="phone-header">
-              <span>9:41</span>
-              <div class="status-bar">
-                <span></span><span></span><span></span>
-              </div>
-            </div>
-
-            <div class="phone-tabs">
-              <span class="phone-tab active">All</span>
-              <span class="phone-tab">Urgent</span>
-              <span class="phone-tab">Normal</span>
-              <span class="phone-tab">Low</span>
-            </div>
-
-            <div class="chat-list">
-              <!-- 会话 1 -->
-              <div class="chat-item">
-                <div class="chat-avatar">A</div>
-                <div class="chat-content">
-                  <div class="chat-name">
-                    <span>Alex Rivera</span>
-                    <span class="chat-meta">2m</span>
-                  </div>
-                  <div class="chat-preview">Can you send the draft by EOD?</div>
-                </div>
-                <span class="chat-tag urgent">Urgent</span>
-              </div>
-              <!-- 会话 2 -->
-              <div class="chat-item">
-                <div class="chat-avatar" style="background: #e8f4fd; color: #1da1f2;">T</div>
-                <div class="chat-content">
-                  <div class="chat-name">
-                    <span>Team Standup</span>
-                    <span class="chat-meta">15m</span>
-                  </div>
-                  <div class="chat-preview">Meeting moved to 3 PM.</div>
-                </div>
-                <span class="chat-tag">Meeting</span>
-              </div>
-              <!-- 会话 3 -->
-              <div class="chat-item">
-                <div class="chat-avatar" style="background: #fce4ec; color: #c62828;">M</div>
-                <div class="chat-content">
-                  <div class="chat-name">
-                    <span>Mom</span>
-                    <span class="chat-meta">1h</span>
-                  </div>
-                  <div class="chat-preview">Call me when you're free.</div>
-                </div>
-                <span class="chat-tag">Personal</span>
-              </div>
-              <!-- 会话 4 -->
-              <div class="chat-item">
-                <div class="chat-avatar" style="background: #e8f5e9; color: #2e7d32;">S</div>
-                <div class="chat-content">
-                  <div class="chat-name">
-                    <span>Sarah Chen</span>
-                    <span class="chat-meta">3h</span>
-                  </div>
-                  <div class="chat-preview">The design files are ready.</div>
-                </div>
-                <span class="chat-tag">Follow-up</span>
-              </div>
-            </div>
-
-            <div class="ai-action-bar">
-              <span>✦ Draft reply to Alex</span>
-              <span class="draft-btn">Draft</span>
-            </div>
-
+      <!-- 真实截图轮播 -->
+      <div class="carousel-wrapper">
+        <div class="carousel-track" id="carouselTrack">
+          <!-- 截图 1: Inbox Light -->
+          <div class="carousel-slide">
+            <img src="https://raw.githubusercontent.com/thevivekrai/ai-chat/main/docs/screenshots/inbox-light.jpg" alt="Sytext Inbox Light Mode" loading="eager" />
           </div>
+          <!-- 截图 2: Link WhatsApp -->
+          <div class="carousel-slide">
+            <img src="https://raw.githubusercontent.com/thevivekrai/ai-chat/main/docs/screenshots/link-whatsapp.jpg" alt="Sytext Link WhatsApp" loading="lazy" />
+          </div>
+          <!-- 截图 3: Ask Dark -->
+          <div class="carousel-slide">
+            <img src="https://raw.githubusercontent.com/thevivekrai/ai-chat/main/docs/screenshots/ask-dark.jpg" alt="Sytext Ask Dark Mode" loading="lazy" />
+          </div>
+        </div>
+        
+        <!-- 导航圆点 -->
+        <div class="carousel-dots" id="carouselDots">
+          <div class="dot active" data-index="0"></div>
+          <div class="dot" data-index="1"></div>
+          <div class="dot" data-index="2"></div>
         </div>
       </div>
 
@@ -903,7 +753,7 @@
       <h2 class="h2">
         Say the <span class="serif-italic">word.</span>
       </h2>
-      <a href="https://sytext.onrender.com/" target="_blank" class="btn btn-black btn-large">Try for free</a>
+      <a href="https://sytext.onrender.com" class="btn btn-black btn-large">Try for free</a>
     </div>
   </section>
 
@@ -912,14 +762,14 @@
     <div class="container footer-content">
       <div class="footer-logo">
         <img src="https://sytext.onrender.com/favicon.svg" alt="Sytext" />
-        Sytext<span>© 2026</span>
+        Sytext Labs, Inc. <span>© 2025</span>
       </div>
       
       <div class="footer-links">
         <a href="#features">Features</a>
         <a href="#privacy">Privacy</a>
         <a href="#faq">FAQ</a>
-        <a href="https://github.com/thevivekrai/ai-chat" target="_blank">GitHub</a>
+        <a href="https://sytext.onrender.com">App</a>
       </div>
       
       <div class="social-links">
@@ -986,6 +836,44 @@
         hamburgerBtn.innerHTML = '<span></span><span></span><span></span>';
         hamburgerBtn.style.fontSize = '';
         hamburgerBtn.style.padding = '';
+      });
+    });
+
+    // 图片轮播逻辑 (更新计数器和圆点)
+    const track = document.getElementById('carouselTrack');
+    const counter = document.getElementById('slideCounter');
+    const dots = document.querySelectorAll('.dot');
+
+    const updateCarouselState = () => {
+      // 计算当前是第几页
+      const slideWidth = track.clientWidth;
+      const scrollPosition = track.scrollLeft;
+      const activeIndex = Math.round(scrollPosition / slideWidth);
+
+      // 更新计数器文本 (01 / 03)
+      counter.textContent = `0${activeIndex + 1} / 03`;
+
+      // 更新圆点状态
+      dots.forEach((dot, index) => {
+        if (index === activeIndex) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+    };
+
+    // 监听滑动事件
+    track.addEventListener('scroll', updateCarouselState);
+
+    // 点击圆点跳转到对应图片
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        const slideWidth = track.clientWidth;
+        track.scrollTo({
+          left: slideWidth * index,
+          behavior: 'smooth'
+        });
       });
     });
   </script>
