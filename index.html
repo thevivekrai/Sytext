@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sytext — Every chat. One calm inbox.</title>
-  <meta name="description" content="WhatsApp, Telegram, Instagram, Slack and SMS lose you in a sea of tabs. Sytext puts every conversation in one place and drafts the reply for you." />
+  <title>Sytext — AI-first unified inbox</title>
+  <meta name="description" content="Sytext puts every chat in one place, tells you who needs a reply, and drafts the response for you." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -13,20 +13,40 @@
   <style>
     /* ============ RESET & TOKENS ============ */
     :root {
-      --bg-top: #d8e5f2; /* Soft blue from screenshots */
-      --bg-bottom: #f4f5f7;
-      --white: #ffffff;
-      --black: #111111;
+      --bg-body: #f4f5f7;
+      --bg-surface: #ffffff;
       --text-main: #111111;
       --text-muted: #555555;
       --text-light: #888888;
       --border: #e2e2e2;
-      --border-dark: #333333;
+      --border-subtle: #f0f0f0;
+      --black: #111111;
+      --white: #ffffff;
+      --brand-orange: #e86f4a;
+      --brand-blue: #d8e5f2;
       --radius-pill: 9999px;
       --radius-lg: 24px;
       --radius-md: 16px;
       --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
       --font-serif: 'Instrument Serif', Georgia, serif;
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Dark Theme Overrides */
+    [data-theme="dark"] {
+      --bg-body: #121212;
+      --bg-surface: #1e1e1e;
+      --text-main: #f5f5f5;
+      --text-muted: #a0a0a0;
+      --text-light: #666666;
+      --border: #333333;
+      --border-subtle: #2a2a2a;
+      --black: #ffffff;
+      --white: #1e1e1e;
+      --brand-blue: #1a2636;
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.4);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -34,10 +54,11 @@
     body {
       font-family: var(--font-sans);
       color: var(--text-main);
-      background-color: var(--bg-bottom);
+      background-color: var(--bg-body);
       -webkit-font-smoothing: antialiased;
       line-height: 1.5;
       overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
     a { color: inherit; text-decoration: none; }
     button { font-family: inherit; cursor: pointer; border: none; background: none; }
@@ -94,7 +115,7 @@
     /* ============ NAVIGATION ============ */
     .nav-wrapper {
       position: fixed;
-      top: 40px; /* Below banner initially, handled by JS */
+      top: 40px;
       left: 0;
       right: 0;
       z-index: 100;
@@ -110,14 +131,14 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: rgba(255, 255, 255, 0.85);
+      background: var(--bg-surface);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(0, 0, 0, 0.08);
+      border: 1px solid var(--border);
       border-radius: var(--radius-pill);
       padding: 8px 8px 8px 20px;
       width: min(100% - 32px, 800px);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      box-shadow: var(--shadow-sm);
       transition: all 0.3s ease;
     }
     .nav-brand {
@@ -127,6 +148,7 @@
       font-weight: 700;
       font-size: 18px;
       letter-spacing: -0.02em;
+      color: var(--text-main);
     }
     .nav-brand img {
       width: 24px;
@@ -139,14 +161,18 @@
       gap: 12px;
     }
     .theme-toggle {
-      width: 28px;
-      height: 28px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       border: 1px solid var(--border);
       display: grid;
       place-items: center;
-      font-size: 14px;
+      font-size: 16px;
+      background: var(--bg-surface);
+      color: var(--text-main);
+      transition: all 0.3s ease;
     }
+    .theme-toggle:hover { background: var(--border-subtle); }
     .btn {
       display: inline-flex;
       align-items: center;
@@ -155,7 +181,7 @@
       font-size: 14px;
       border-radius: var(--radius-pill);
       padding: 10px 20px;
-      transition: transform 0.2s ease, background 0.2s ease;
+      transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
     }
     .btn:active { transform: scale(0.98); }
     .btn-black {
@@ -163,7 +189,7 @@
       color: var(--white);
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
-    .btn-black:hover { background: #333; }
+    .btn-black:hover { background: var(--text-muted); }
     .btn-large {
       padding: 16px 36px;
       font-size: 16px;
@@ -178,7 +204,7 @@
       display: block;
       width: 20px;
       height: 2px;
-      background: var(--black);
+      background: var(--text-main);
       border-radius: 2px;
     }
 
@@ -186,7 +212,7 @@
     .mobile-menu {
       position: fixed;
       inset: 0;
-      background: var(--white);
+      background: var(--bg-surface);
       z-index: 99;
       padding: 100px 24px 24px;
       display: flex;
@@ -196,6 +222,7 @@
       font-weight: 600;
       transform: translateY(-100%);
       transition: transform 0.3s ease;
+      color: var(--text-main);
     }
     .mobile-menu.open { transform: translateY(0); }
 
@@ -203,13 +230,14 @@
     .hero {
       padding-top: 160px;
       padding-bottom: 80px;
-      background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+      background: linear-gradient(180deg, var(--brand-blue) 0%, var(--bg-body) 100%);
       text-align: center;
+      transition: background 0.3s ease;
     }
     .hero .h1 { margin-bottom: 24px; }
     .hero-subtitle {
       font-size: 18px;
-      color: #333;
+      color: var(--text-muted);
       max-width: 500px;
       margin: 0 auto 40px;
       font-weight: 500;
@@ -224,123 +252,177 @@
       font-size: 15px;
       font-weight: 500;
       margin-bottom: 24px;
-      color: #444;
+      color: var(--text-muted);
     }
-    .carousel-label .step { color: #888; }
-    .carousel-label .icon { color: #e86f4a; font-size: 18px; }
-    .carousel-label .app-name { font-weight: 700; color: var(--black); }
+    .carousel-label .step { color: var(--text-light); }
+    .carousel-label .icon { color: var(--brand-orange); font-size: 18px; }
+    .carousel-label .app-name { font-weight: 700; color: var(--text-main); }
 
-    /* ============ MAC WINDOW MOCKUP ============ */
-    .mockup-wrapper {
-      max-width: 760px;
+    /* ============ PHONE MOCKUP (FROM README) ============ */
+    .phone-mockup-wrapper {
+      max-width: 380px;
       margin: 0 auto;
       position: relative;
       perspective: 1000px;
     }
-    .mockup-window {
-      background: #1e1e1e;
-      border-radius: 20px;
+    .phone-frame {
+      background: var(--bg-surface);
+      border: 8px solid var(--text-main);
+      border-radius: 48px;
       overflow: hidden;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.1);
-      text-align: left;
+      box-shadow: var(--shadow-md), 0 0 0 2px var(--border);
       position: relative;
-      padding-bottom: 90px; /* Space for dock */
+      padding: 0;
+      transition: border-color 0.3s ease;
     }
-    .window-bar {
-      background: #2d2d2d;
-      padding: 12px 18px;
+    .phone-screen {
+      background: var(--bg-body);
+      padding: 16px 12px 24px;
+      min-height: 580px;
       display: flex;
+      flex-direction: column;
+      transition: background 0.3s ease;
+    }
+    /* Notch */
+    .phone-notch {
+      width: 120px;
+      height: 28px;
+      background: var(--text-main);
+      border-radius: 0 0 18px 18px;
+      margin: 0 auto 12px;
+    }
+    /* Phone Header */
+    .phone-header {
+      display: flex;
+      justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #111;
-      position: relative;
-    }
-    .window-dots {
-      display: flex;
-      gap: 8px;
-    }
-    .window-dots span {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-    }
-    .dot-red { background: #ff5f56; }
-    .dot-yellow { background: #ffbd2e; }
-    .dot-green { background: #27c93f; }
-    .window-title {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      color: #888;
+      padding: 0 8px;
+      margin-bottom: 16px;
       font-size: 13px;
-      font-family: monospace;
+      font-weight: 600;
+      color: var(--text-main);
     }
-    .window-content {
-      padding: 24px;
-      color: #e5e5e5;
-      font-family: monospace;
-      font-size: 14px;
-      min-height: 280px;
-    }
-    .terminal-box {
-      border: 1px solid #e86f4a;
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 24px;
-      background: rgba(232, 111, 74, 0.05);
-    }
-    .terminal-box p { margin-bottom: 8px; }
-    .terminal-box .orange { color: #e86f4a; }
-    .terminal-box .muted { color: #888; }
-    .terminal-input {
+    .phone-header .status-bar {
       display: flex;
+      gap: 4px;
       align-items: center;
+    }
+    .phone-header .status-bar span {
+      display: block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-light);
+    }
+    /* Phone Tabs */
+    .phone-tabs {
+      display: flex;
       gap: 8px;
-      border: 1px solid #444;
-      border-radius: 6px;
-      padding: 10px 12px;
-      color: #aaa;
+      padding: 0 8px;
+      margin-bottom: 16px;
+      font-size: 12px;
+      font-weight: 600;
+      overflow-x: auto;
     }
-    .terminal-input span { color: #fff; }
-    
-    /* Dock */
-    .app-dock {
-      position: absolute;
-      bottom: 16px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 8px 12px;
-      border-radius: 18px;
+    .phone-tab {
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      background: var(--bg-surface);
+      color: var(--text-muted);
+      white-space: nowrap;
+      border: 1px solid var(--border);
+    }
+    .phone-tab.active {
+      background: var(--black);
+      color: var(--white);
+      border-color: var(--black);
+    }
+    /* Chat List */
+    .chat-list {
       display: flex;
+      flex-direction: column;
       gap: 10px;
-      align-items: center;
+      flex: 1;
     }
-    .dock-icon {
+    .chat-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--bg-surface);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      text-align: left;
+    }
+    .chat-avatar {
       width: 36px;
       height: 36px;
-      border-radius: 10px;
+      border-radius: 50%;
+      background: var(--brand-blue);
       display: grid;
       place-items: center;
-      font-size: 18px;
-      background: #fff;
-      color: var(--black);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+      flex-shrink: 0;
     }
-    .dock-icon.dark { background: #333; color: #fff; }
-    .dock-icon.active { box-shadow: 0 0 0 2px #fff; }
-    
-    /* Floating Avatar */
-    .floating-avatar {
-      position: absolute;
-      bottom: 10px;
-      right: 20px;
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      border: 3px solid #fff;
-      background: url('https://i.pravatar.cc/150?img=11') center/cover;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    .chat-content {
+      flex: 1;
+      min-width: 0;
+    }
+    .chat-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      justify-content: space-between;
+    }
+    .chat-meta {
+      font-size: 11px;
+      color: var(--text-light);
+    }
+    .chat-preview {
+      font-size: 12px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .chat-tag {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      background: #fff3cd;
+      color: #856404;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .chat-tag.urgent {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    /* AI Action Bar */
+    .ai-action-bar {
+      margin-top: 16px;
+      padding: 12px;
+      background: var(--bg-surface);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--brand-orange);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    .ai-action-bar .draft-btn {
+      background: var(--brand-orange);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 12px;
+      font-weight: 700;
     }
 
     .hero-caption {
@@ -352,7 +434,7 @@
     }
 
     /* ============ COMPARISON SECTION ============ */
-    .comparison { background: var(--white); }
+    .comparison { background: var(--bg-surface); }
     .comparison .h2 { margin-bottom: 16px; }
     .comparison .text-muted { max-width: 600px; margin: 0 auto 64px; }
     
@@ -364,17 +446,17 @@
       font-weight: 700;
       font-size: 14px;
     }
-    .typing-labels span { color: #ff5e5e; }
-    .typing-labels span:nth-child(2) { color: #2ecc71; }
+    .typing-labels span { color: var(--brand-orange); }
+    .typing-labels span:nth-child(2) { color: var(--text-light); }
 
     .stat-card {
-      background: var(--white);
+      background: var(--bg-surface);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       padding: 40px;
       max-width: 600px;
       margin: 0 auto;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.02);
+      box-shadow: var(--shadow-sm);
     }
     .stat-row { margin-bottom: 24px; }
     .stat-header {
@@ -383,11 +465,12 @@
       margin-bottom: 8px;
       font-weight: 600;
       font-size: 16px;
+      color: var(--text-main);
     }
     .stat-header .val { font-size: 24px; font-weight: 800; }
     .stat-bar {
       height: 12px;
-      background: #eee;
+      background: var(--border-subtle);
       border-radius: 6px;
       overflow: hidden;
     }
@@ -395,8 +478,8 @@
       height: 100%;
       border-radius: 6px;
     }
-    .stat-fill.dark { background: #333; width: 85%; }
-    .stat-fill.light { background: #ddd; width: 20%; }
+    .stat-fill.dark { background: var(--text-main); width: 90%; }
+    .stat-fill.light { background: var(--border); width: 15%; }
     
     .stat-divider {
       height: 1px;
@@ -413,6 +496,7 @@
       font-size: 36px;
       font-weight: 800;
       letter-spacing: -0.04em;
+      color: var(--text-main);
     }
     .stat-grid .desc {
       font-size: 14px;
@@ -423,13 +507,13 @@
       justify-content: center;
       gap: 32px;
       margin-top: 48px;
-      color: #888;
+      color: var(--text-light);
       font-size: 14px;
       font-weight: 500;
     }
 
     /* ============ PRIVACY SECTION ============ */
-    .privacy { background: var(--bg-bottom); }
+    .privacy { background: var(--bg-body); }
     .privacy .h2 { margin-bottom: 24px; }
     .privacy .text-muted { max-width: 600px; margin: 0 auto 64px; }
     
@@ -455,14 +539,15 @@
       place-items: center;
       font-size: 24px;
       margin-bottom: 24px;
-      background: var(--white);
-      color: #333;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      background: var(--bg-surface);
+      color: var(--text-main);
+      box-shadow: var(--shadow-sm);
     }
     .state-item h3 {
       font-size: 24px;
       font-weight: 700;
       margin-bottom: 8px;
+      color: var(--text-main);
     }
     .state-item p {
       color: var(--text-muted);
@@ -471,7 +556,7 @@
     }
 
     /* ============ FAQ SECTION ============ */
-    .faq { background: var(--white); }
+    .faq { background: var(--bg-surface); }
     .faq .h2 { margin-bottom: 64px; }
     .faq-list {
       max-width: 760px;
@@ -484,12 +569,12 @@
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
       overflow: hidden;
-      background: var(--white);
+      background: var(--bg-surface);
       transition: all 0.2s ease;
     }
     .faq-item[open] {
-      border-color: #ccc;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+      border-color: var(--text-light);
+      box-shadow: var(--shadow-sm);
     }
     .faq-item summary {
       padding: 24px;
@@ -500,11 +585,12 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      color: var(--text-main);
     }
     .faq-item summary::-webkit-details-marker { display: none; }
     .faq-item summary::after {
       content: '+';
-      color: #aaa;
+      color: var(--text-light);
       font-size: 24px;
       font-weight: 300;
     }
@@ -520,21 +606,22 @@
 
     /* ============ FINAL CTA ============ */
     .final-cta {
-      background: linear-gradient(180deg, #f8f9fa 0%, var(--bg-top) 100%);
+      background: linear-gradient(180deg, var(--bg-body) 0%, var(--brand-blue) 100%);
       text-align: center;
       padding: 120px 0;
+      transition: background 0.3s ease;
     }
     .final-cta .h2 {
       font-size: clamp(48px, 6vw, 72px);
       margin-bottom: 40px;
     }
-    .final-cta .h2 .serif-italic { color: var(--black); }
 
     /* ============ FOOTER ============ */
     footer {
-      background: var(--white);
+      background: var(--bg-surface);
       border-top: 1px solid var(--border);
       padding: 64px 0 40px;
+      transition: background 0.3s ease;
     }
     .footer-content {
       display: flex;
@@ -549,9 +636,10 @@
       font-weight: 700;
       font-size: 18px;
       letter-spacing: -0.02em;
+      color: var(--text-main);
     }
     .footer-logo img { width: 24px; height: 24px; border-radius: 6px; }
-    .footer-logo span { color: #888; font-weight: 400; font-size: 14px; margin-left: 8px; }
+    .footer-logo span { color: var(--text-light); font-weight: 400; font-size: 14px; margin-left: 8px; }
     
     .footer-links {
       display: flex;
@@ -560,19 +648,19 @@
       gap: 24px;
       font-size: 12px;
       letter-spacing: 0.1em;
-      color: #888;
+      color: var(--text-light);
       text-transform: uppercase;
       font-weight: 600;
     }
-    .footer-links a:hover { color: var(--black); }
+    .footer-links a:hover { color: var(--text-main); }
     
     .social-links {
       display: flex;
       gap: 16px;
       margin-top: 8px;
-      color: #888;
+      color: var(--text-light);
     }
-    .social-links a:hover { color: var(--black); }
+    .social-links a:hover { color: var(--text-main); }
 
     /* ============ RESPONSIVE ============ */
     @media (max-width: 768px) {
@@ -582,12 +670,9 @@
       .hamburger { display: flex; }
       
       .hero { padding-top: 120px; }
-      .mockup-window { border-radius: 16px; padding-bottom: 70px; }
-      .window-content { padding: 16px; font-size: 12px; }
-      .terminal-box { padding: 12px; }
-      .app-dock { gap: 6px; padding: 6px 10px; border-radius: 14px; }
-      .dock-icon { width: 28px; height: 28px; font-size: 14px; border-radius: 8px; }
-      .floating-avatar { width: 48px; height: 48px; right: 12px; bottom: 8px; }
+      .phone-frame { border-width: 6px; border-radius: 36px; }
+      .phone-screen { padding: 12px 8px 16px; min-height: 500px; }
+      .phone-notch { width: 100px; height: 24px; }
       
       .stat-card { padding: 24px; }
       .stat-grid { grid-template-columns: 1fr; gap: 16px; }
@@ -609,13 +694,13 @@
   <div class="nav-wrapper" id="navWrapper">
     <nav class="navbar">
       <a href="#" class="nav-brand">
-        <!-- Replace with your actual logo.png -->
+        <!-- Replace with your actual logo.svg -->
         <img src="https://sytext.onrender.com/favicon.svg" alt="Sytext" />
         <span>Sytext</span>
       </a>
       
       <div class="nav-actions">
-        <div class="theme-toggle">◐</div>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">☀️</button>
         <a href="https://sytext.onrender.com" class="btn btn-black">Try for free</a>
         <button class="hamburger" id="hamburgerBtn">
           <span></span><span></span><span></span>
@@ -646,46 +731,87 @@
         <span class="step">01 / 05</span>
         <span class="icon">✺</span>
         <span class="app-name">WhatsApp</span>
-        <span style="color: #888;">hands-free</span>
+        <span style="color: var(--text-light);">hands-free</span>
       </div>
 
-      <!-- MAC WINDOW MOCKUP -->
-      <div class="mockup-wrapper">
-        <div class="mockup-window">
-          <div class="window-bar">
-            <div class="window-dots">
-              <span class="dot-red"></span>
-              <span class="dot-yellow"></span>
-              <span class="dot-green"></span>
-            </div>
-            <div class="window-title">Sytext</div>
-          </div>
-          
-          <div class="window-content">
-            <div class="terminal-box">
-              <p><span class="orange">✺</span> Welcome to Sytext!</p>
-              <p class="muted">Priority · Urgent</p>
-              <p class="muted">cwd: /Users/you/inbox</p>
-            </div>
+      <!-- PHONE MOCKUP (FROM README) -->
+      <div class="phone-mockup-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="phone-notch"></div>
             
-            <div class="terminal-input">
-              <span>&gt;</span> I'll send you the draft now...
+            <div class="phone-header">
+              <span>9:41</span>
+              <div class="status-bar">
+                <span></span><span></span><span></span>
+              </div>
             </div>
-            <p class="muted" style="margin-top: 12px;">? for shortcuts</p>
-          </div>
 
-          <!-- Dock -->
-          <div class="app-dock">
-            <div class="dock-icon active">💬</div>
-            <div class="dock-icon dark">✈️</div>
-            <div class="dock-icon">📸</div>
-            <div class="dock-icon dark">#</div>
-            <div class="dock-icon">✉️</div>
-            <div class="dock-icon dark">🤖</div>
-          </div>
+            <div class="phone-tabs">
+              <span class="phone-tab active">All</span>
+              <span class="phone-tab">Urgent</span>
+              <span class="phone-tab">Normal</span>
+              <span class="phone-tab">Low</span>
+            </div>
 
-          <!-- Avatar -->
-          <div class="floating-avatar"></div>
+            <div class="chat-list">
+              <!-- Chat 1 -->
+              <div class="chat-item">
+                <div class="chat-avatar">A</div>
+                <div class="chat-content">
+                  <div class="chat-name">
+                    <span>Alex Rivera</span>
+                    <span class="chat-meta">2m</span>
+                  </div>
+                  <div class="chat-preview">Can you send the draft by EOD?</div>
+                </div>
+                <span class="chat-tag urgent">Urgent</span>
+              </div>
+              <!-- Chat 2 -->
+              <div class="chat-item">
+                <div class="chat-avatar" style="background: #e8f4fd; color: #1da1f2;">T</div>
+                <div class="chat-content">
+                  <div class="chat-name">
+                    <span>Team Standup</span>
+                    <span class="chat-meta">15m</span>
+                  </div>
+                  <div class="chat-preview">Meeting moved to 3 PM.</div>
+                </div>
+                <span class="chat-tag">Meeting</span>
+              </div>
+              <!-- Chat 3 -->
+              <div class="chat-item">
+                <div class="chat-avatar" style="background: #fce4ec; color: #c62828;">M</div>
+                <div class="chat-content">
+                  <div class="chat-name">
+                    <span>Mom</span>
+                    <span class="chat-meta">1h</span>
+                  </div>
+                  <div class="chat-preview">Call me when you're free.</div>
+                </div>
+                <span class="chat-tag">Personal</span>
+              </div>
+              <!-- Chat 4 -->
+              <div class="chat-item">
+                <div class="chat-avatar" style="background: #e8f5e9; color: #2e7d32;">S</div>
+                <div class="chat-content">
+                  <div class="chat-name">
+                    <span>Sarah Chen</span>
+                    <span class="chat-meta">3h</span>
+                  </div>
+                  <div class="chat-preview">The design files are ready.</div>
+                </div>
+                <span class="chat-tag">Follow-up</span>
+              </div>
+            </div>
+
+            <!-- AI Action Bar -->
+            <div class="ai-action-bar">
+              <span>✦ Draft reply to Alex</span>
+              <span class="draft-btn">Draft</span>
+            </div>
+
+          </div>
         </div>
       </div>
 
@@ -724,14 +850,14 @@
         <div class="stat-row">
           <div class="stat-header">
             <span>time saved</span>
-            <span class="val" style="color: #aaa;">5 min</span>
+            <span class="val" style="color: var(--text-light);">5 min</span>
           </div>
           <div class="stat-bar">
             <div class="stat-fill light"></div>
           </div>
         </div>
 
-        <div style="text-align: center; font-size: 14px; color: #888; margin-top: 16px;">
+        <div style="text-align: center; font-size: 14px; color: var(--text-light); margin-top: 16px;">
           ~9× faster to clear your queue
         </div>
 
@@ -739,8 +865,8 @@
 
         <div class="stat-grid">
           <div>
-            <div class="num">95%+</div>
-            <div class="desc">AI accuracy<br />on priority tags</div>
+            <div class="num">15+</div>
+            <div class="desc">sample conversations<br />in the demo inbox</div>
           </div>
           <div>
             <div class="num">5+</div>
@@ -750,7 +876,7 @@
       </div>
 
       <div class="app-logos">
-        <span style="color: #ccc;">Terminal</span> • 
+        <span style="color: var(--text-light);">Terminal</span> • 
         <span>WhatsApp</span> • 
         <span>Telegram</span> • 
         <span>Slack</span>
@@ -865,7 +991,7 @@
     <div class="container footer-content">
       <div class="footer-logo">
         <img src="https://sytext.onrender.com/favicon.svg" alt="Sytext" />
-        Sytext Inc. <span>© 2026</span>
+        Sytext <span>© 2026</span>
       </div>
       
       <div class="footer-links">
@@ -888,6 +1014,33 @@
   </footer>
 
   <script>
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const htmlEl = document.documentElement;
+
+    // Check for saved theme or system preference
+    const getPreferredTheme = () => {
+      const saved = localStorage.getItem('theme');
+      if (saved) return saved;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+
+    // Apply theme
+    const setTheme = (theme) => {
+      htmlEl.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      themeToggle.textContent = theme === 'dark' ? '🌙' : '☀️';
+    };
+
+    // Initialize
+    setTheme(getPreferredTheme());
+
+    // Toggle on click
+    themeToggle.addEventListener('click', () => {
+      const current = htmlEl.getAttribute('data-theme');
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
     // Scroll effect for navbar
     const navWrapper = document.getElementById('navWrapper');
     const mobileMenu = document.getElementById('mobileMenu');
@@ -904,7 +1057,6 @@
     // Mobile menu toggle
     hamburgerBtn.addEventListener('click', () => {
       mobileMenu.classList.toggle('open');
-      // Change hamburger icon to X
       if(mobileMenu.classList.contains('open')) {
         hamburgerBtn.innerHTML = '✕';
         hamburgerBtn.style.fontSize = '20px';
