@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sytext — AI-first unified inbox</title>
-  <meta name="description" content="Sytext puts every chat in one place, tells you who needs a reply, and drafts the response for you." />
+  <meta name="description" content="Sytext puts every chat in one place, tells you who needs a reply by AI priority, and drafts the response for you." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -13,40 +13,42 @@
   <style>
     /* ============ RESET & TOKENS ============ */
     :root {
-      --bg-body: #f4f5f7;
+      --bg-body: #f0f2f5;
       --bg-surface: #ffffff;
-      --text-main: #111111;
-      --text-muted: #555555;
-      --text-light: #888888;
-      --border: #e2e2e2;
-      --border-subtle: #f0f0f0;
-      --black: #111111;
+      --text-main: #0f1419;
+      --text-muted: #536471;
+      --text-light: #8b98a5;
+      --border: #e1e8ed;
+      --border-subtle: #f1f5f8;
+      --black: #0f1419;
       --white: #ffffff;
-      --brand-orange: #e86f4a;
-      --brand-blue: #d8e5f2;
+      --accent-orange: #ff6b4a;
+      --accent-blue: #1d9bf0;
+      --brand-glass-bg: linear-gradient(180deg, #e8f0fe 0%, #f0f2f5 100%);
       --radius-pill: 9999px;
       --radius-lg: 24px;
       --radius-md: 16px;
       --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
       --font-serif: 'Instrument Serif', Georgia, serif;
-      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.6);
     }
 
-    /* Dark Theme Overrides */
     [data-theme="dark"] {
-      --bg-body: #121212;
-      --bg-surface: #1e1e1e;
-      --text-main: #f5f5f5;
-      --text-muted: #a0a0a0;
-      --text-light: #666666;
-      --border: #333333;
-      --border-subtle: #2a2a2a;
+      --bg-body: #0b0f14;
+      --bg-surface: #151a21;
+      --text-main: #f0f3f5;
+      --text-muted: #8b98a5;
+      --text-light: #5c6b7a;
+      --border: #2a323d;
+      --border-subtle: #1e252e;
       --black: #ffffff;
-      --white: #1e1e1e;
-      --brand-blue: #1a2636;
+      --white: #151a21;
+      --brand-glass-bg: linear-gradient(180deg, #121a26 0%, #0b0f14 100%);
       --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
-      --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.5);
+      --glass-border: rgba(255, 255, 255, 0.1);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -132,8 +134,8 @@
       align-items: center;
       justify-content: space-between;
       background: var(--bg-surface);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--border);
       border-radius: var(--radius-pill);
       padding: 8px 8px 8px 20px;
@@ -150,11 +152,7 @@
       letter-spacing: -0.02em;
       color: var(--text-main);
     }
-    .nav-brand img {
-      width: 24px;
-      height: 24px;
-      border-radius: 6px;
-    }
+    .nav-brand img { width: 24px; height: 24px; border-radius: 6px; }
     .nav-actions {
       display: flex;
       align-items: center;
@@ -208,7 +206,7 @@
       border-radius: 2px;
     }
 
-    /* Mobile Menu Overlay */
+    /* Mobile Menu */
     .mobile-menu {
       position: fixed;
       inset: 0;
@@ -226,24 +224,16 @@
     }
     .mobile-menu.open { transform: translateY(0); }
 
-    /* ============ HERO SECTION ============ */
+    /* ============ HERO ============ */
     .hero {
       padding-top: 160px;
       padding-bottom: 80px;
-      background: linear-gradient(180deg, var(--brand-blue) 0%, var(--bg-body) 100%);
+      background: var(--brand-glass-bg);
       text-align: center;
       transition: background 0.3s ease;
     }
     .hero .h1 { margin-bottom: 24px; }
-    .hero-subtitle {
-      font-size: 18px;
-      color: var(--text-muted);
-      max-width: 500px;
-      margin: 0 auto 40px;
-      font-weight: 500;
-    }
-
-    /* Carousel Text */
+    
     .carousel-label {
       display: flex;
       align-items: center;
@@ -254,16 +244,14 @@
       margin-bottom: 24px;
       color: var(--text-muted);
     }
-    .carousel-label .step { color: var(--text-light); }
-    .carousel-label .icon { color: var(--brand-orange); font-size: 18px; }
+    .carousel-label .icon { color: var(--accent-orange); font-size: 18px; }
     .carousel-label .app-name { font-weight: 700; color: var(--text-main); }
 
-    /* ============ PHONE MOCKUP (FROM README) ============ */
+    /* ============ 演示手机组件 (Sytext UI) ============ */
     .phone-mockup-wrapper {
       max-width: 380px;
       margin: 0 auto;
       position: relative;
-      perspective: 1000px;
     }
     .phone-frame {
       background: var(--bg-surface);
@@ -283,7 +271,6 @@
       flex-direction: column;
       transition: background 0.3s ease;
     }
-    /* Notch */
     .phone-notch {
       width: 120px;
       height: 28px;
@@ -291,7 +278,6 @@
       border-radius: 0 0 18px 18px;
       margin: 0 auto 12px;
     }
-    /* Phone Header */
     .phone-header {
       display: flex;
       justify-content: space-between;
@@ -302,19 +288,15 @@
       font-weight: 600;
       color: var(--text-main);
     }
-    .phone-header .status-bar {
-      display: flex;
-      gap: 4px;
-      align-items: center;
-    }
-    .phone-header .status-bar span {
+    .status-bar { display: flex; gap: 4px; align-items: center; }
+    .status-bar span {
       display: block;
       width: 8px;
       height: 8px;
       border-radius: 50%;
       background: var(--text-light);
     }
-    /* Phone Tabs */
+
     .phone-tabs {
       display: flex;
       gap: 8px;
@@ -337,7 +319,7 @@
       color: var(--white);
       border-color: var(--black);
     }
-    /* Chat List */
+
     .chat-list {
       display: flex;
       flex-direction: column;
@@ -358,18 +340,15 @@
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      background: var(--brand-blue);
+      background: var(--accent-blue);
       display: grid;
       place-items: center;
       font-size: 14px;
       font-weight: 700;
-      color: var(--text-main);
+      color: #fff;
       flex-shrink: 0;
     }
-    .chat-content {
-      flex: 1;
-      min-width: 0;
-    }
+    .chat-content { flex: 1; min-width: 0; }
     .chat-name {
       font-size: 14px;
       font-weight: 600;
@@ -377,10 +356,7 @@
       display: flex;
       justify-content: space-between;
     }
-    .chat-meta {
-      font-size: 11px;
-      color: var(--text-light);
-    }
+    .chat-meta { font-size: 11px; color: var(--text-light); }
     .chat-preview {
       font-size: 12px;
       color: var(--text-muted);
@@ -396,19 +372,15 @@
       background: #fff3cd;
       color: #856404;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
     }
-    .chat-tag.urgent {
-      background: #f8d7da;
-      color: #721c24;
-    }
-    /* AI Action Bar */
+    .chat-tag.urgent { background: #f8d7da; color: #721c24; }
+
     .ai-action-bar {
       margin-top: 16px;
       padding: 12px;
       background: var(--bg-surface);
       border-radius: var(--radius-md);
-      border: 1px solid var(--brand-orange);
+      border: 1px solid var(--accent-orange);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -417,7 +389,7 @@
       color: var(--text-main);
     }
     .ai-action-bar .draft-btn {
-      background: var(--brand-orange);
+      background: var(--accent-orange);
       color: #fff;
       padding: 6px 14px;
       border-radius: var(--radius-pill);
@@ -433,33 +405,22 @@
       font-weight: 500;
     }
 
-    /* ============ COMPARISON SECTION ============ */
+    /* ============ 核心特性 ============ */
     .comparison { background: var(--bg-surface); }
     .comparison .h2 { margin-bottom: 16px; }
     .comparison .text-muted { max-width: 600px; margin: 0 auto 64px; }
-    
-    .typing-labels {
-      display: flex;
-      justify-content: center;
-      gap: 32px;
-      margin-bottom: 40px;
-      font-weight: 700;
-      font-size: 14px;
-    }
-    .typing-labels span { color: var(--brand-orange); }
-    .typing-labels span:nth-child(2) { color: var(--text-light); }
 
     .stat-card {
       background: var(--bg-surface);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       padding: 40px;
-      max-width: 600px;
+      max-width: 640px;
       margin: 0 auto;
       box-shadow: var(--shadow-sm);
     }
-    .stat-row { margin-bottom: 24px; }
-    .stat-header {
+    .feature-row { margin-bottom: 24px; }
+    .feature-header {
       display: flex;
       justify-content: space-between;
       margin-bottom: 8px;
@@ -467,7 +428,7 @@
       font-size: 16px;
       color: var(--text-main);
     }
-    .stat-header .val { font-size: 24px; font-weight: 800; }
+    .feature-header .val { font-size: 24px; font-weight: 800; }
     .stat-bar {
       height: 12px;
       background: var(--border-subtle);
@@ -478,8 +439,8 @@
       height: 100%;
       border-radius: 6px;
     }
-    .stat-fill.dark { background: var(--text-main); width: 90%; }
-    .stat-fill.light { background: var(--border); width: 15%; }
+    .stat-fill.dark { background: var(--text-main); width: 85%; }
+    .stat-fill.light { background: var(--border); width: 20%; }
     
     .stat-divider {
       height: 1px;
@@ -505,18 +466,19 @@
     .app-logos {
       display: flex;
       justify-content: center;
-      gap: 32px;
+      flex-wrap: wrap;
+      gap: 16px 28px;
       margin-top: 48px;
       color: var(--text-light);
       font-size: 14px;
       font-weight: 500;
     }
 
-    /* ============ PRIVACY SECTION ============ */
+    /* ============ 隐私与本地保护 ============ */
     .privacy { background: var(--bg-body); }
     .privacy .h2 { margin-bottom: 24px; }
     .privacy .text-muted { max-width: 600px; margin: 0 auto 64px; }
-    
+
     .states-wrapper {
       display: flex;
       flex-direction: column;
@@ -543,19 +505,10 @@
       color: var(--text-main);
       box-shadow: var(--shadow-sm);
     }
-    .state-item h3 {
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: var(--text-main);
-    }
-    .state-item p {
-      color: var(--text-muted);
-      font-size: 15px;
-      line-height: 1.5;
-    }
+    .state-item h3 { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
+    .state-item p { color: var(--text-muted); font-size: 15px; line-height: 1.5; }
 
-    /* ============ FAQ SECTION ============ */
+    /* ============ FAQ ============ */
     .faq { background: var(--bg-surface); }
     .faq .h2 { margin-bottom: 64px; }
     .faq-list {
@@ -572,10 +525,7 @@
       background: var(--bg-surface);
       transition: all 0.2s ease;
     }
-    .faq-item[open] {
-      border-color: var(--text-light);
-      box-shadow: var(--shadow-sm);
-    }
+    .faq-item[open] { border-color: var(--text-light); box-shadow: var(--shadow-sm); }
     .faq-item summary {
       padding: 24px;
       font-size: 18px;
@@ -588,35 +538,20 @@
       color: var(--text-main);
     }
     .faq-item summary::-webkit-details-marker { display: none; }
-    .faq-item summary::after {
-      content: '+';
-      color: var(--text-light);
-      font-size: 24px;
-      font-weight: 300;
-    }
-    .faq-item[open] summary::after {
-      content: '−';
-    }
-    .faq-content {
-      padding: 0 24px 24px;
-      color: var(--text-muted);
-      font-size: 16px;
-      line-height: 1.6;
-    }
+    .faq-item summary::after { content: '+'; color: var(--text-light); font-size: 24px; font-weight: 300; }
+    .faq-item[open] summary::after { content: '−'; }
+    .faq-content { padding: 0 24px 24px; color: var(--text-muted); font-size: 16px; line-height: 1.6; }
 
-    /* ============ FINAL CTA ============ */
+    /* ============ 最终 CTA ============ */
     .final-cta {
-      background: linear-gradient(180deg, var(--bg-body) 0%, var(--brand-blue) 100%);
+      background: var(--brand-glass-bg);
       text-align: center;
       padding: 120px 0;
       transition: background 0.3s ease;
     }
-    .final-cta .h2 {
-      font-size: clamp(48px, 6vw, 72px);
-      margin-bottom: 40px;
-    }
+    .final-cta .h2 { font-size: clamp(48px, 6vw, 72px); margin-bottom: 40px; }
 
-    /* ============ FOOTER ============ */
+    /* ============ 页脚 ============ */
     footer {
       background: var(--bg-surface);
       border-top: 1px solid var(--border);
@@ -653,16 +588,10 @@
       font-weight: 600;
     }
     .footer-links a:hover { color: var(--text-main); }
-    
-    .social-links {
-      display: flex;
-      gap: 16px;
-      margin-top: 8px;
-      color: var(--text-light);
-    }
+    .social-links { display: flex; gap: 16px; margin-top: 8px; color: var(--text-light); }
     .social-links a:hover { color: var(--text-main); }
 
-    /* ============ RESPONSIVE ============ */
+    /* ============ 响应式 ============ */
     @media (max-width: 768px) {
       .nav-wrapper { top: 16px; }
       .navbar { padding: 8px 12px 8px 16px; width: calc(100% - 24px); }
@@ -676,7 +605,6 @@
       
       .stat-card { padding: 24px; }
       .stat-grid { grid-template-columns: 1fr; gap: 16px; }
-      .app-logos { flex-wrap: wrap; gap: 16px; }
       
       .faq-item summary { padding: 20px; font-size: 16px; }
       .faq-content { padding: 0 20px 20px; font-size: 15px; }
@@ -685,23 +613,22 @@
 </head>
 <body>
 
-  <!-- TOP BANNER -->
+  <!-- 顶部提示条 -->
   <div class="top-banner">
-    Try the demo. No account needed. <a href="https://sytext.onrender.com">Try for free</a>
+    Try Sytext demo. No account needed. <a href="https://github.com/thevivekrai/ai-chat" target="_blank">View on GitHub</a>
   </div>
 
-  <!-- NAVIGATION -->
+  <!-- 导航栏 -->
   <div class="nav-wrapper" id="navWrapper">
     <nav class="navbar">
       <a href="#" class="nav-brand">
-        <!-- Replace with your actual logo.svg -->
         <img src="https://sytext.onrender.com/favicon.svg" alt="Sytext" />
         <span>Sytext</span>
       </a>
       
       <div class="nav-actions">
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">☀️</button>
-        <a href="https://sytext.onrender.com" class="btn btn-black">Try for free</a>
+        <a href="https://sytext.onrender.com/" target="_blank" class="btn btn-black">Try for free</a>
         <button class="hamburger" id="hamburgerBtn">
           <span></span><span></span><span></span>
         </button>
@@ -709,17 +636,15 @@
     </nav>
   </div>
 
-  <!-- MOBILE MENU -->
+  <!-- 移动端菜单 -->
   <div class="mobile-menu" id="mobileMenu">
-    <a href="#how">How it works</a>
     <a href="#features">Features</a>
     <a href="#privacy">Privacy</a>
-    <a href="#pricing">Pricing</a>
     <a href="#faq">FAQ</a>
-    <a href="https://sytext.onrender.com" class="btn btn-black" style="margin-top: 24px;">Try for free</a>
+    <a href="https://github.com/thevivekrai/ai-chat" target="_blank" class="btn btn-black" style="margin-top: 24px;">Try for free</a>
   </div>
 
-  <!-- HERO -->
+  <!-- Hero 区域 -->
   <section class="hero">
     <div class="container">
       <h1 class="h1">
@@ -730,11 +655,11 @@
       <div class="carousel-label">
         <span class="step">01 / 05</span>
         <span class="icon">✺</span>
-        <span class="app-name">WhatsApp</span>
-        <span style="color: var(--text-light);">hands-free</span>
+        <span class="app-name">Sytext</span>
+        <span style="color: var(--text-light);">AI-first inbox</span>
       </div>
 
-      <!-- PHONE MOCKUP (FROM README) -->
+      <!-- 演示手机 -->
       <div class="phone-mockup-wrapper">
         <div class="phone-frame">
           <div class="phone-screen">
@@ -755,7 +680,7 @@
             </div>
 
             <div class="chat-list">
-              <!-- Chat 1 -->
+              <!-- 会话 1 -->
               <div class="chat-item">
                 <div class="chat-avatar">A</div>
                 <div class="chat-content">
@@ -767,7 +692,7 @@
                 </div>
                 <span class="chat-tag urgent">Urgent</span>
               </div>
-              <!-- Chat 2 -->
+              <!-- 会话 2 -->
               <div class="chat-item">
                 <div class="chat-avatar" style="background: #e8f4fd; color: #1da1f2;">T</div>
                 <div class="chat-content">
@@ -779,7 +704,7 @@
                 </div>
                 <span class="chat-tag">Meeting</span>
               </div>
-              <!-- Chat 3 -->
+              <!-- 会话 3 -->
               <div class="chat-item">
                 <div class="chat-avatar" style="background: #fce4ec; color: #c62828;">M</div>
                 <div class="chat-content">
@@ -791,7 +716,7 @@
                 </div>
                 <span class="chat-tag">Personal</span>
               </div>
-              <!-- Chat 4 -->
+              <!-- 会话 4 -->
               <div class="chat-item">
                 <div class="chat-avatar" style="background: #e8f5e9; color: #2e7d32;">S</div>
                 <div class="chat-content">
@@ -805,7 +730,6 @@
               </div>
             </div>
 
-            <!-- AI Action Bar -->
             <div class="ai-action-bar">
               <span>✦ Draft reply to Alex</span>
               <span class="draft-btn">Draft</span>
@@ -819,8 +743,8 @@
     </div>
   </section>
 
-  <!-- COMPARISON (Typing. Push-to-talk.) -->
-  <section class="section comparison" id="how">
+  <!-- 特性说明 -->
+  <section class="section comparison" id="features">
     <div class="container center">
       <h2 class="h2">
         Scattered. Noisy.<br />
@@ -831,88 +755,85 @@
         Sytext triages it, prioritizes it, and drafts the response.
       </p>
 
-      <div class="typing-labels" style="margin-top: 64px;">
-        <span>app hopping</span>
-        <span>Sytext</span>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-row">
-          <div class="stat-header">
-            <span>time lost</span>
-            <span class="val">45 min</span>
+      <div class="stat-card" style="margin-top: 64px;">
+        <div class="feature-row">
+          <div class="feature-header">
+            <span>conversations unified</span>
+            <span class="val">15+</span>
           </div>
           <div class="stat-bar">
             <div class="stat-fill dark"></div>
           </div>
         </div>
         
-        <div class="stat-row">
-          <div class="stat-header">
-            <span>time saved</span>
-            <span class="val" style="color: var(--text-light);">5 min</span>
-          </div>
+        <div class="feature-row">
           <div class="stat-bar">
             <div class="stat-fill light"></div>
           </div>
-        </div>
-
-        <div style="text-align: center; font-size: 14px; color: var(--text-light); margin-top: 16px;">
-          ~9× faster to clear your queue
         </div>
 
         <div class="stat-divider"></div>
 
         <div class="stat-grid">
           <div>
-            <div class="num">15+</div>
-            <div class="desc">sample conversations<br />in the demo inbox</div>
+            <div class="num">40</div>
+            <div class="desc">messages per chat stored<br />server-side for sync</div>
           </div>
           <div>
-            <div class="num">5+</div>
-            <div class="desc">networks it unifies<br />by default</div>
+            <div class="num">10+</div>
+            <div class="desc">AI models available<br />(Claude, Gemini, GPT…)</div>
+          </div>
+          <div>
+            <div class="num">Urgent</div>
+            <div class="desc">AI priority levels<br />normal & low</div>
+          </div>
+          <div>
+            <div class="num">Incognito</div>
+            <div class="desc">read without receipts,<br />type without typing…</div>
           </div>
         </div>
       </div>
 
       <div class="app-logos">
-        <span style="color: var(--text-light);">Terminal</span> • 
-        <span>WhatsApp</span> • 
-        <span>Telegram</span> • 
+        <span>WhatsApp</span>
+        <span>Telegram</span>
+        <span>Instagram</span>
         <span>Slack</span>
+        <span>SMS</span>
+        <span>Matrix</span>
+        <span>Guffshuff</span>
       </div>
     </div>
   </section>
 
-  <!-- PRIVACY (The mic is on.) -->
+  <!-- 隐私与安全 -->
   <section class="section privacy" id="privacy">
     <div class="container center">
       <h2 class="h2">
-        The inbox is live.<br />
-        <span class="serif-italic">Sytext isn't.</span>
+        Your chats stay<br />
+        <span class="serif-italic">on your device.</span>
       </h2>
       <p class="text-muted">
-        Until you say the word, all that runs is the on-device listener on your own computer. 
-        It can't record, store, or send a thing. It just waits.
+        Each browser keeps its own copy of your chats. The server only stores the links and the latest 40 messages of each chat. Nothing is ever sent automatically.
       </p>
 
       <div class="states-wrapper" style="margin-top: 64px;">
         <div class="state-item">
           <div class="state-icon">☾</div>
-          <h3>Waiting</h3>
-          <p>The on-device listener waits for the trigger word, and nothing else.</p>
+          <h3>Incognito</h3>
+          <p>Read without sending read receipts, and type without showing "typing…".</p>
         </div>
         
         <div class="state-item">
-          <div class="state-icon">🎤</div>
-          <h3>Awake</h3>
-          <p>Now it hears you. Your voice is transcribed right on your own computer.</p>
+          <div class="state-icon">🔒</div>
+          <h3>Local-first</h3>
+          <p>Chats live in your browser, not a central database. The server only keeps the latest 40 messages.</p>
         </div>
         
         <div class="state-item">
-          <div class="state-icon">↻</div>
-          <h3>Back to waiting</h3>
-          <p>Once the command is sent, it goes back to sleep. Silent, secure, local.</p>
+          <div class="state-icon">✍️</div>
+          <h3>You send, not AI</h3>
+          <p>Sytext drafts replies, but nothing goes out until you press send.</p>
         </div>
       </div>
     </div>
@@ -925,123 +846,114 @@
       
       <div class="faq-list">
         <details class="faq-item" open>
-          <summary>Is Sytext a voice typing app?</summary>
+          <summary>What is Sytext?</summary>
           <div class="faq-content">
-            No, Sytext is an AI-first unified inbox. It puts WhatsApp, Telegram, Instagram, Slack, and SMS into one interface, tells you who needs a reply, and drafts the response for you.
+            Sytext is an AI-first unified inbox. It puts WhatsApp, Telegram, Instagram, Slack, SMS and more into one place, tells you who needs a reply by AI priority, and drafts the response for you.
           </div>
         </details>
         
         <details class="faq-item">
-          <summary>Do I really never touch the keyboard?</summary>
+          <summary>Do I need an account to try it?</summary>
           <div class="faq-content">
-            You still press send. Sytext generates the draft, but nothing is ever sent automatically. You always have the final review.
+            No. The demo inbox has 15 sample conversations across five networks, and you can try it without creating an account.
           </div>
         </details>
         
         <details class="faq-item">
-          <summary>Is it always listening to me?</summary>
+          <summary>Does it send messages automatically?</summary>
           <div class="faq-content">
-            No. Sytext doesn't listen to your microphone. It reads your incoming messages on the networks you've linked, and only when you've allowed AI access to those specific chats.
+            Never. Sytext drafts replies, but you always review and press send yourself.
           </div>
         </details>
         
         <details class="faq-item">
-          <summary>Which apps does it work with?</summary>
+          <summary>Which networks can I connect?</summary>
           <div class="faq-content">
-            WhatsApp, Telegram, Instagram DMs, Slack, SMS, Matrix, and your own chat site (Guffshuff). 
+            WhatsApp, Telegram, Instagram DMs, Guffshuff, Matrix (through bridges), Slack and SMS. You can also use a Telegram bot.
           </div>
         </details>
         
         <details class="faq-item">
-          <summary>How accurate is the transcription?</summary>
+          <summary>Is my chat history stored on a server?</summary>
           <div class="faq-content">
-            Sytext doesn't transcribe audio—it reads text. For the text it drafts, AI results are checked against strict schemas before they ever reach your screen.
+            Chats live on your devices. The server only keeps the links and the latest 40 messages per chat (plus pinned or starred), so a small free database is enough.
           </div>
         </details>
         
         <details class="faq-item">
-          <summary>Do I need an internet connection?</summary>
+          <summary>What AI models can I use?</summary>
           <div class="faq-content">
-            Yes, to sync with the networks. But Sytext keeps a local copy of your chats on your device, so you can read history offline.
+            The built-in demo AI works by default. Signed in, you can use the free shared AI (OpenRouter or Gemini), or bring your own key for Claude, ChatGPT, Gemini, Groq, Mistral, DeepSeek, Grok, or any OpenAI-compatible service.
           </div>
         </details>
         
         <details class="faq-item">
-          <summary>What happens after I download?</summary>
+          <summary>How do priority tags work?</summary>
           <div class="faq-content">
-            Sytext is a web app. There's nothing to download. Just sign in at sytext.onrender.com, connect a network, and your inbox is ready.
+            Each allowed chat is marked Urgent, Normal or Low, and tagged by topic: Question, Follow-up, Deadline, Payment, Order, Meeting, Work, Personal, Promo or FYI. Marking a chat done clears the tags that asked something of you.
           </div>
         </details>
       </div>
     </div>
   </section>
 
-  <!-- FINAL CTA -->
+  <!-- 底部 CTA -->
   <section class="final-cta">
     <div class="container">
       <h2 class="h2">
         Say the <span class="serif-italic">word.</span>
       </h2>
-      <a href="https://sytext.onrender.com" class="btn btn-black btn-large">Try for free</a>
+      <a href="https://sytext.onrender.com/" target="_blank" class="btn btn-black btn-large">Try for free</a>
     </div>
   </section>
 
-  <!-- FOOTER -->
+  <!-- 页脚 -->
   <footer>
     <div class="container footer-content">
       <div class="footer-logo">
         <img src="https://sytext.onrender.com/favicon.svg" alt="Sytext" />
-        Sytext <span>© 2026</span>
+        Sytext<span>© 2026</span>
       </div>
       
       <div class="footer-links">
-        <a href="#how">Pricing</a>
-        <a href="#features">Docs</a>
-        <a href="#privacy">Articles</a>
-        <a href="#faq">Changelog</a>
+        <a href="#features">Features</a>
         <a href="#privacy">Privacy</a>
-        <a href="#privacy">Security</a>
-        <a href="#">Terms</a>
-        <a href="#">Contact</a>
-        <a href="#">Brand</a>
+        <a href="#faq">FAQ</a>
+        <a href="https://github.com/thevivekrai/ai-chat" target="_blank">GitHub</a>
       </div>
       
       <div class="social-links">
-        <a href="#">𝕏</a>
-        <a href="#">in</a>
+        <a href="#" target="_blank">𝕏</a>
+        <a href="#" target="_blank">in</a>
       </div>
     </div>
   </footer>
 
   <script>
-    // Theme Toggle
+    // 深色模式
     const themeToggle = document.getElementById('themeToggle');
     const htmlEl = document.documentElement;
 
-    // Check for saved theme or system preference
     const getPreferredTheme = () => {
       const saved = localStorage.getItem('theme');
       if (saved) return saved;
       return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     };
 
-    // Apply theme
     const setTheme = (theme) => {
       htmlEl.setAttribute('data-theme', theme);
       localStorage.setItem('theme', theme);
       themeToggle.textContent = theme === 'dark' ? '🌙' : '☀️';
     };
 
-    // Initialize
     setTheme(getPreferredTheme());
 
-    // Toggle on click
     themeToggle.addEventListener('click', () => {
       const current = htmlEl.getAttribute('data-theme');
       setTheme(current === 'dark' ? 'light' : 'dark');
     });
 
-    // Scroll effect for navbar
+    // 导航栏滚动效果
     const navWrapper = document.getElementById('navWrapper');
     const mobileMenu = document.getElementById('mobileMenu');
     const hamburgerBtn = document.getElementById('hamburgerBtn');
@@ -1054,7 +966,7 @@
       }
     });
 
-    // Mobile menu toggle
+    // 移动端菜单
     hamburgerBtn.addEventListener('click', () => {
       mobileMenu.classList.toggle('open');
       if(mobileMenu.classList.contains('open')) {
@@ -1068,7 +980,6 @@
       }
     });
 
-    // Close mobile menu on link click
     document.querySelectorAll('.mobile-menu a').forEach(link => {
       link.addEventListener('click', () => {
         mobileMenu.classList.remove('open');
